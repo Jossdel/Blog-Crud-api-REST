@@ -6,37 +6,8 @@ const test = (req, res) => {
   });
 };
 
-const curso = (req, res) => {
-  return res.status(200).json([
-    {
-      nombre: "Curso de Node.js",
-      duracion: "5 horas",
-      costo: "Gratis",
-    },
-    {
-      curso: "Curso de React.js",
-      duracion: "10 horas",
-      costo: "Gratis",
-    },
-  ]);
-};
-
 const crear = (req, res) => {
   const parametros = req.body;
-
-  try {
-    const validarTitulo =
-      !validator.isEmpty(parametros.title) &&
-      validator.isLength(parametros.title, { min: 5, max: undefined });
-    const validarContenido = !validator.isEmpty(parametros.content);
-    if (!validarTitulo || !validarContenido) {
-      throw new Error("No se a validado la informacion");
-    }
-  } catch (error) {
-    return res.status(400).json({
-      message: "Faltan campos por llenar",
-    });
-  }
 
   const article = new Article(parametros);
   article
@@ -50,13 +21,92 @@ const crear = (req, res) => {
     .catch((error) => {
       return res.status(400).json({
         status: "Error",
-        message: "no se pudo guardar el articulo",
+        message:
+          "Debe tener al menos 5 caracteres o no se puede guardar el articulo",
       });
     });
 };
 
+listar = (req, res) => {
+  Article.find({})
+    .sort({ date: -1 })
+    .limit() //no le puse limite solo es para recordar que se puede poner
+    .then((articulo) => {
+      return res.status(200).json({
+        status: "success",
+
+        contador: articulo.length,
+        articulo,
+      });
+    })
+    .catch((err) => {
+      return res.status(404).send({
+        status: "error",
+        message: "No se han encontrado articulos",
+      });
+    });
+};
+const uno = (req, res) => {
+  const id = req.params.id;
+
+  Article.findById(id)
+    .then((articulo) => {
+      return res.status(200).json({
+        status: "success",
+        articulo,
+      });
+    })
+    .catch((err) => {
+      return res.status(404).send({
+        status: "error",
+        message: "No se han encontrado articulos",
+      });
+    });
+};
+const eliminar = (req, res) => {
+  const id = req.params.id;
+  Article.findOneAndDelete({ _id: id }).then((articulo) => {
+    return res
+      .status(200)
+      .json({
+        message: "Articulo eliminado",
+        articulo,
+      })
+      .catch((err) => {
+        return res.status(404).send({
+          status: "error",
+          message: "No se han encontrado articulos",
+        });
+      });
+  });
+};
+
+const actualizar = (req, res) => {
+  const id = req.params.id;
+  const parametros = req.body;
+
+  Article.findOneAndUpdate({ _id: id }, parametros, { new: true })
+    .then((articulo) => {
+      return res.status(200).json({
+        message: "Articulo actualizado",
+        articulo,
+      });
+    })
+    .catch((err) => {
+      return res.status(404).send({
+        status: "error",
+        message: "No se han encontrado articulos",
+      });
+    });
+};
+const subir = (req, res) => {};
 module.exports = {
   test,
-  curso,
+
   crear,
+  listar,
+  uno,
+  eliminar,
+  actualizar,
+  subir,
 };

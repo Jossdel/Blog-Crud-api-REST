@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const connection = require("../database/connection");
+const route_articles = require("./routes/articles.routes");
 const dotenv = require("dotenv");
 dotenv.config();
 const app = express();
@@ -11,7 +12,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // RUTAS
-const route_articles = require("./routes/articles.routes");
 app.use("/api", route_articles);
 
 const PORT = process.env.PORT || 3000;
