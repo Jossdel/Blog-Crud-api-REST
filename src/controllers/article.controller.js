@@ -1,5 +1,6 @@
 const Article = require("../model/Articles.model.js");
 const validator = require("validator");
+const fs = require("node:fs");
 const test = (req, res) => {
   return res.status(200).json({
     message: "Hello World",
@@ -99,10 +100,31 @@ const actualizar = (req, res) => {
       });
     });
 };
-const subir = (req, res) => {};
+const subir = (req, res) => {
+  if (!req.file) {
+    return res.status(404).json({
+      message: "PETICION SIN ARCHIVO",
+    });
+  }
+  let archivo = req.file.originalname;
+
+  let archivoSplit = archivo.split(".");
+  let extencion = archivoSplit[archivoSplit.length - 1];
+
+  if (extencion !== "png" && extencion !== "jpg" && extencion !== "jpeg") {
+    return res.status(400).json({
+      message: "Error, solo se permiten archivos png, jpg y jpeg",
+    });
+  } else {
+    return res.status(200).json({
+      message: "Archivo subido",
+      archivo: req.file,
+      archivoSplit,
+    });
+  }
+};
 module.exports = {
   test,
-
   crear,
   listar,
   uno,
