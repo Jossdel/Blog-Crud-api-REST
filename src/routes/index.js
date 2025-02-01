@@ -1,0 +1,17 @@
+import { router as actualizar } from "./actualizar.routes.js";
+import { router as buscar } from "./buscar.routes.js";
+import { router as eliminar } from "./eliminar.routes.js";
+import { router as crear } from "./crear.routes.js";
+import { router as listar } from "./listar.routes.js";
+import { router as subir } from "./subir.routes.js";
+import { Router } from "express";
+const router = Router();
+
+router.use("/", crear);
+router.use("/", eliminar);
+router.use("/", actualizar);
+router.use("/", subir);
+router.use("/", listar);
+router.use("/", buscar);
+
+export { router };

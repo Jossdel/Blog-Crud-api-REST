@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const validator = require("validator");
+import mongoose from "mongoose";
+import validator from "validator";
 
 const ArticlesSchema = new mongoose.Schema({
   title: {
@@ -31,7 +31,17 @@ const ArticlesSchema = new mongoose.Schema({
   image: {
     type: String,
     default: "default.png",
+    validate: {
+      validator: (value) => {
+        const validExtensions = ["png", "jpg", "jpeg", "gif"];
+        const extension = value.split(".").pop().toLowerCase();
+        return validExtensions.includes(extension);
+      },
+      message:
+        "La imagen debe tener una extensión válida (png, jpg, jpeg, gif)",
+    },
   },
 });
 
-module.exports = mongoose.model("Article", ArticlesSchema);
+const Article = mongoose.model("Article", ArticlesSchema);
+export { Article };
