@@ -2,8 +2,7 @@ import express from "express";
 import cors from "cors";
 import { connection } from "../database/connection.js";
 import { router } from "./routes/index.js";
-import dotenv from "dotenv";
-dotenv.config();
+
 const app = express();
 //Conexión a la base de datos
 connection();

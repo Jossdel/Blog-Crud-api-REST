@@ -1,4 +1,4 @@
-import { Article } from "../model/Articles.model.js";
+import Article from "../model/Articles.model.js";
 const buscarId = async (req, res) => {
   try {
     const id = req.params.id;
@@ -10,8 +10,8 @@ const buscarId = async (req, res) => {
       saveArticle,
     });
   } catch (error) {
-    res.send({
-      massage: " error al guardar el articulo",
+    res.status(400).json({
+      message: " error al buscar el articulo",
       error,
     });
   }

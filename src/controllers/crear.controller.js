@@ -1,20 +1,24 @@
-import { Article } from "../model/Articles.model.js";
+import Article from "../model/Articles.model.js";
 
 const crear = async (req, res) => {
   try {
-    const parametros = req.body;
-    const article = new Article(parametros);
+    const { title, content } = req.body;
+    const article = new Article({
+      title: title,
+      content: content,
+    });
 
     const saveArticle = await article.save();
     res.status(200).send({
-      message: "success",
+      message: "Se ha guardado el articulo",
       saveArticle,
     });
   } catch (error) {
-    res.send({
-      massage: " al guardar el articulo",
+    res.status(500).send({
+      message: "error al guardar el articulo",
       error,
     });
+    console.log(error);
   }
 };
 export { crear };

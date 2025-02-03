@@ -1,4 +1,4 @@
-import { Article } from "../model/Articles.model.js";
+import Article from "../model/Articles.model.js";
 
 const subir = (req, res) => {
   if (!req.file) {
