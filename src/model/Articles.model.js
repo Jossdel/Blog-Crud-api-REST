@@ -22,7 +22,6 @@ const ArticleSchema = new mongoose.Schema({
 
   image: {
     type: String,
-    default: "default.png",
     validate: {
       validator: (value) => {
         const validExtensions = ["png", "jpg", "jpeg", "gif"];

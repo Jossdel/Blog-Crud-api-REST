@@ -1,30 +1,33 @@
 import Article from "../model/Articles.model.js";
 
-const subir = (req, res) => {
-  if (!req.file) {
-    return res.status(404).json({
-      message: "PETICION SIN ARCHIVO",
+const subir = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(404).json({
+        message: "PETICION SIN ARCHIVO",
+      });
+    }
+    const id = req.params.id;
+    const { filename } = req.file;
+    const parametros = req.body;
+
+    const articulo = await Article.findOneAndUpdate(
+      { _id: id },
+      { image: filename },
+      { new: true }
+    );
+
+    return res.status(200).json({
+      message: "Articulo actualizado",
+      articulo: articulo,
+      parametros,
+      fichero: req.file,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error en la petición",
+      error: error,
     });
   }
-
-  const id = req.params.id;
-  Article.findOneAndUpdate(
-    { _id: id },
-    { image: req.file.filename },
-    { new: true }
-  )
-    .then((articulo) => {
-      return res.status(200).json({
-        message: "Articulo actualizado",
-        articulo: articulo,
-        fichero: req.file,
-      });
-    })
-    .catch((err) => {
-      return res.status(404).send({
-        status: "error",
-        message: "No se han encontrado articulos",
-      });
-    });
 };
 export { subir };

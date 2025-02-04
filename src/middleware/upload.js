@@ -1,12 +1,15 @@
-import multer from "multer";
+import multer, { diskStorage } from "multer";
 
-const storage = multer.diskStorage({
+import dotenv from "dotenv";
+dotenv.config();
+
+const storage = diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Ruta donde se almacenarán los archivos
+    cb(null, "uploads/"); // Carpeta donde se guardarán los archivos
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname); // Generar un nombre único para cada archivo
+    cb(null, Date.now() + "_" + file.originalname); // Generar un nombre único para cada archivo
   },
 });
-const upload = multer({ storage });
-export { upload };
+const uploadImage = multer({ storage });
+export default uploadImage;
